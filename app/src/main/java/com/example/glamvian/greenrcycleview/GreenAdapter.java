@@ -26,6 +26,7 @@ public class GreenAdapter extends RecyclerView.Adapter<GreenAdapter.NumberViewHo
 
     private static final String TAG = GreenAdapter.class.getSimpleName();
     private int mNumberItems;
+    private static int viewHolderCount;
     /**
      * Constructor for GreenAdapter that accepts a number of items to display and the specification
      * for the ListItemClickListener.
@@ -59,6 +60,13 @@ public class GreenAdapter extends RecyclerView.Adapter<GreenAdapter.NumberViewHo
         View view = inflater.inflate(layoutIdForListItem,viewGroup, shouldAttachToParentImmediately);
         NumberViewHolder viewHolder = new NumberViewHolder(view);
 
+        viewHolder.viewHolderIndex.setText("ViewHolder index: "+viewHolderCount);
+
+        int backgroundColorForViewHolder = ColorUtils.getViewHolderBackgroundColorFromInstance(context, viewHolderCount);
+        viewHolder.itemView.setBackgroundColor(backgroundColorForViewHolder);
+        viewHolderCount++;
+        Log.d(TAG, "onCreateViewHolder: number of ViewHolders created: "+viewHolderCount);
+
         return viewHolder;
     }
     /**
@@ -89,6 +97,7 @@ public class GreenAdapter extends RecyclerView.Adapter<GreenAdapter.NumberViewHo
 
     class NumberViewHolder extends RecyclerView.ViewHolder{
         TextView listNumberView;
+        TextView viewHolderIndex;
         /**
          * Constructor for our ViewHolder. Within this constructor, we get a reference to our
          * TextViews and set an onClickListener to listen for clicks. Those will be handled in the
@@ -99,6 +108,7 @@ public class GreenAdapter extends RecyclerView.Adapter<GreenAdapter.NumberViewHo
         public NumberViewHolder(View itemView){
             super(itemView);
             listNumberView = (TextView)itemView.findViewById(R.id.tv_item_number);
+            viewHolderIndex =(TextView)itemView.findViewById(R.id.tv_view_holder_instance);
         }
         /**
          * A method we wrote for convenience. This method will take an integer as input and
