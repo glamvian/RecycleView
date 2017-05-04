@@ -4,9 +4,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements GreenAdapter.ListItemClickListener{
     private static final int NUM_LIST_ITEMS = 100;
     /*
      * References to RecyclerView and Adapter to reset the list to its
@@ -14,6 +17,7 @@ public class MainActivity extends AppCompatActivity {
      */
     private GreenAdapter mAdapter;
     private RecyclerView mNumberlist;
+    private Toast mtoast;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +51,35 @@ public class MainActivity extends AppCompatActivity {
         /*
          * The GreenAdapter is responsible for displaying each item in the list.
          */
-        mAdapter = new GreenAdapter(NUM_LIST_ITEMS);
+        mAdapter = new GreenAdapter(NUM_LIST_ITEMS, this);
         mNumberlist.setAdapter(mAdapter);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int itemId = item.getItemId();
+        switch (itemId){
+            case R.id.action_refresh:
+                mAdapter = new GreenAdapter(NUM_LIST_ITEMS, this);
+                mNumberlist.setAdapter(mAdapter);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onListItemClick(int clickedItemIndex) {
+    if (mtoast!= null){
+        mtoast.cancel();
+    }
+    String toastMessage = "Item #"+ clickedItemIndex + " clicked";
+        mtoast = Toast.makeText(this, toastMessage, Toast.LENGTH_LONG);
+        mtoast.show();
     }
 }
